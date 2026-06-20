@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>FlashChat</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+        radial-gradient(circle at top left,#1f3b52 0,transparent 35%),
+        linear-gradient(135deg,#0d141c,#121b24);
+    font-family:Segoe UI,Arial,sans-serif;
+    color:white;
+}
+
+.container{
+    width:540px;
+    background:#17212b;
+    border:1px solid #2b3d4d;
+    border-radius:24px;
+    padding:50px;
+    text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+}
+
+.logo{
+    font-size:42px;
+    font-weight:800;
+    margin-bottom:10px;
+    letter-spacing:.5px;
+}
+
+.logo span{
+    color:#5ea4e8;
+}
+
+.subtitle{
+    color:#8d9baa;
+    margin-bottom:35px;
+    font-size:15px;
+    line-height:1.5;
+}
+
+.actions{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.btn{
+    display:block;
+    text-decoration:none;
+    background:#2c5f87;
+    color:white;
+    padding:15px;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:600;
+    transition:.18s;
+}
+
+.btn:hover{
+    background:#39729e;
+    transform:translateY(-2px);
+}
+
+.btn.secondary{
+    background:#22303c;
+}
+
+.btn.secondary:hover{
+    background:#2b3d4d;
+}
+
+.info{
+    margin-top:28px;
+    color:#72808d;
+    font-size:13px;
+    line-height:1.5;
+    border-top:1px solid #263847;
+    padding-top:20px;
+}
+
+.version{
+    margin-top:10px;
+    color:#55626e;
+    font-size:12px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        FlashChat
+    </div>
+
+    <div class="subtitle">
+        Веб-мессенджер на Django и WebSocket
+    </div>
+
+    <div class="actions">
+
+        <a href="/chats/" class="btn">
+            Открыть чаты
+        </a>
+
+        <a href="/chats/create/" class="btn">
+            Создать чат
+        </a>
+
+    </div>
+
+    <div class="info">
+        Вы вошли как {{ request.user.username }}
+    </div>
+
+</div>
+
+</body>
+</html>

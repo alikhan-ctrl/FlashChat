@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Новый чат</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+        radial-gradient(circle at top left,#1f3b52 0,transparent 35%),
+        linear-gradient(135deg,#0d141c,#121b24);
+    font-family:Segoe UI,Arial,sans-serif;
+    color:white;
+}
+
+.card{
+    width:500px;
+    background:#17212b;
+    border:1px solid #2b3d4d;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+}
+
+.header{
+    padding:22px 24px;
+    background:#1b2935;
+    border-bottom:1px solid #2b3d4d;
+}
+
+.title{
+    font-size:24px;
+    font-weight:700;
+}
+
+.subtitle{
+    margin-top:6px;
+    color:#8d9baa;
+    font-size:13px;
+}
+
+.content{
+    padding:24px;
+}
+
+.label{
+    font-size:13px;
+    color:#8d9baa;
+    margin-bottom:8px;
+}
+
+select{
+    width:100%;
+    padding:14px;
+    background:#0f1821;
+    border:1px solid #2b3d4d;
+    border-radius:12px;
+    color:white;
+    font-size:14px;
+    outline:none;
+    transition:.15s;
+}
+
+select:focus{
+    border-color:#3f7faf;
+}
+
+.actions{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
+}
+
+.btn{
+    flex:1;
+    border:none;
+    border-radius:12px;
+    padding:14px;
+    cursor:pointer;
+    font-size:14px;
+    transition:.15s;
+}
+
+.btn-primary{
+    background:#2c5f87;
+    color:white;
+}
+
+.btn-primary:hover{
+    background:#39729e;
+}
+
+.btn-secondary{
+    background:#22303c;
+    color:white;
+    text-decoration:none;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.btn-secondary:hover{
+    background:#2b3d4d;
+}
+
+.info{
+    margin-top:18px;
+    color:#7d8a96;
+    font-size:13px;
+    line-height:1.5;
+    border-top:1px solid #263847;
+    padding-top:14px;
+}
+
+.user-count{
+    margin-top:10px;
+    font-size:12px;
+    color:#6d7c89;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <div class="header">
+        <div class="title">Создание чата</div>
+    </div>
+
+    <div class="content">
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="label">
+                Выберите пользователя
+            </div>
+
+            <select name="user_id" required>
+                {% for user in users %}
+                    <option value="{{ user.id }}">
+                        {{ user.username }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <div class="actions">
+
+                <button class="btn btn-primary" type="submit">
+                    Создать
+                </button>
+
+                <a href="/chats/" class="btn btn-secondary">
+                    Назад
+                </a>
+
+            </div>
+
+        </form>
+
+        <div class="info">
+            После создания пользователь автоматически появится в этом чате.
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

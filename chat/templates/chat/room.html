@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>{{ room.name }}</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Segoe UI, Arial, sans-serif;
+    background:
+        radial-gradient(circle at top left, #1f3b52 0, transparent 32%),
+        linear-gradient(135deg, #0d141c, #121b24);
+    color:#eef4f8;
+}
+
+.chat-app{
+    width:760px;
+    height:94vh;
+    margin:18px auto;
+    background:rgba(22,32,42,.96);
+    border:1px solid #2b3d4d;
+    border-radius:20px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    box-shadow:0 22px 60px rgba(0,0,0,.35);
+}
+
+.header{
+    background:#1b2935;
+    padding:16px 20px;
+    border-bottom:1px solid #2b3d4d;
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.back-link{
+    width:36px;
+    height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#c7d4df;
+    text-decoration:none;
+    font-size:24px;
+    border-radius:10px;
+}
+
+.back-link:hover{
+    background:#263847;
+    color:white;
+}
+
+.header-info{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+
+.room-title{
+    font-size:18px;
+    font-weight:650;
+}
+
+.room-count{
+    font-size:12px;
+    color:#8d9baa;
+}
+
+.room-settings{
+    padding:12px 16px;
+    background:#14202b;
+    border-bottom:1px solid #253645;
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+.room-settings form{
+    display:flex;
+    gap:8px;
+}
+
+.room-settings input{
+    width:220px;
+    background:#0f1821;
+    border:1px solid #2b3d4d;
+    color:white;
+    padding:10px 12px;
+    border-radius:10px;
+    outline:none;
+}
+
+.messages{
+    flex:1;
+    overflow-y:auto;
+    padding:22px;
+    background:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:34px 34px;
+}
+
+.messages::-webkit-scrollbar{
+    width:8px;
+}
+
+.messages::-webkit-scrollbar-thumb{
+    background:#334858;
+    border-radius:20px;
+}
+
+.message-row{
+    display:flex;
+    align-items:flex-end;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.my-row{
+    justify-content:flex-end;
+}
+
+.message-avatar{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#2f6f9f;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    object-fit:cover;
+    overflow:hidden;
+    flex-shrink:0;
+    font-weight:600;
+    color:white;
+}
+
+.message{
+    background:#21313f;
+    padding:10px 14px;
+    border-radius:16px 16px 16px 6px;
+    max-width:76%;
+    width:fit-content;
+    word-break:break-word;
+    cursor:default;
+    user-select:text;
+    box-shadow:0 6px 16px rgba(0,0,0,.16);
+}
+
+.me{
+    background:#2c5f87;
+    border-radius:16px 16px 6px 16px;
+}
+
+.username{
+    font-size:12px;
+    color:#9fc4e3;
+    margin-bottom:5px;
+}
+
+.time{
+    color:#b0bdc9;
+    margin-left:6px;
+    font-size:11px;
+}
+
+.chat-image{
+    max-width:260px;
+    margin-top:8px;
+    border-radius:12px;
+    display:block;
+}
+
+.input-box{
+    display:flex;
+    gap:10px;
+    padding:16px;
+    border-top:1px solid #2b3d4d;
+    background:#14202b;
+}
+
+input{
+    flex:1;
+    background:#0f1821;
+    border:1px solid #2b3d4d;
+    color:white;
+    padding:13px 16px;
+    border-radius:14px;
+    outline:none;
+    font-size:14px;
+}
+
+input:focus{
+    border-color:#3f7faf;
+}
+
+input::placeholder{
+    color:#7e8c99;
+}
+
+button{
+    background:#2c5f87;
+    border:none;
+    color:white;
+    padding:0 18px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:14px;
+    transition:.18s;
+}
+
+button:hover{
+    background:#39729e;
+}
+
+.danger{
+    background:#733039;
+    padding:12px 18px;
+    min-height:42px;
+}
+
+.danger:hover{
+    background:#8a3b45;
+}
+
+#typing{
+    background:#14202b;
+}
+
+/* Контекстное меню */
+.ctx-menu{
+    position:fixed;
+    background:#1b2935;
+    border:1px solid #34495d;
+    border-radius:12px;
+    padding:6px;
+    z-index:1000;
+    min-width:160px;
+    box-shadow:0 14px 35px rgba(0,0,0,.35);
+    display:none;
+}
+
+.ctx-menu.show{
+    display:block;
+}
+
+.ctx-item{
+    padding:10px 14px;
+    border-radius:9px;
+    cursor:pointer;
+    font-size:13px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.ctx-item:hover{
+    background:#2c5f87;
+}
+
+.ctx-item.red{
+    color:#ff9aa8;
+}
+
+.ctx-item.red:hover{
+    background:#4b2832;
+}
+
+.ctx-separator{
+    height:1px;
+    background:#34495d;
+    margin:5px 0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="chat-app">
+
+    <div class="header">
+        <a href="/chats/" class="back-link">←</a>
+        <div class="header-info">
+            <div class="room-title">{{ room.name }}</div>
+            <div class="room-count">{{ messages|length }} сообщений</div>
+        </div>
+    </div>
+
+    <div class="room-settings">
+        <form method="post" action="/chats/{{ room.id }}/rename/">
+            {% csrf_token %}
+            <input name="name" value="{{ room.name }}">
+            <button type="submit">Переименовать</button>
+        </form>
+        <form method="post" action="/chats/{{ room.id }}/delete/">
+            {% csrf_token %}
+            <button class="danger" type="submit">Удалить чат</button>
+        </form>
+    </div>
+
+    <div id="messages" class="messages">
+
+        {% for message in messages %}
+
+        <div class="message-row {% if message.user == request.user %}my-row{% endif %}">
+
+            {% if message.user != request.user %}
+                {% if message.user.profile.avatar %}
+                    <img class="message-avatar" src="{{ message.user.profile.avatar.url }}">
+                {% else %}
+                    <div class="message-avatar">
+                        {{ message.user.username|first|upper }}
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            <div id="message-{{ message.id }}"
+                 class="message {% if message.user == request.user %}me{% endif %}"
+                 {% if message.user == request.user %}data-mine="true"{% endif %}
+                 data-text="{{ message.text }}">
+
+                <div class="username">
+                    {% if message.user.profile.display_name %}
+                        {{ message.user.profile.display_name }}
+                    {% else %}
+                        {{ message.user.username }}
+                    {% endif %}
+                    <span class="time">{{ message.created_at|date:"H:i" }}</span>
+                </div>
+
+                <div>{{ message.text }}</div>
+
+                {% if message.image %}
+                    <img src="{{ message.image.url }}" class="chat-image">
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <div id="typing" style="padding:0 20px 10px;color:#8a99a8;font-size:13px;display:none;"></div>
+
+    <div class="input-box">
+        <input id="messageInput" placeholder="Сообщение">
+        <button id="sendBtn">Отправить</button>
+    </div>
+
+</div>
+
+<!-- Контекстное меню -->
+<div class="ctx-menu" id="ctxMenu">
+    <div class="ctx-item" id="ctxCopy">📋 Скопировать</div>
+    <div class="ctx-separator" id="ctxSep"></div>
+    <div class="ctx-item red" id="ctxDelete">🗑 Удалить</div>
+</div>
+
+<script>
+
+const roomId = "{{ room.id }}";
+const currentUser = "{{ request.user.username }}";
+
+const socket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${roomId}/`);
+
+const messagesEl = document.getElementById("messages");
+const typingBox = document.getElementById("typing");
+const input = document.getElementById("messageInput");
+const sendBtn = document.getElementById("sendBtn");
+const ctxMenu = document.getElementById("ctxMenu");
+const ctxCopy = document.getElementById("ctxCopy");
+const ctxDelete = document.getElementById("ctxDelete");
+const ctxSep = document.getElementById("ctxSep");
+
+let activeMessageId = null;
+let activeMessageText = null;
+let activeIsMine = false;
+
+function scrollBottom(){
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+scrollBottom();
+
+// Показать контекстное меню
+function showCtxMenu(e, messageEl){
+    e.preventDefault();
+
+    activeMessageId = messageEl.id.replace("message-", "");
+    activeMessageText = messageEl.dataset.text;
+    activeIsMine = messageEl.dataset.mine === "true";
+
+    // Показываем/прячем кнопку удаления
+    ctxDelete.style.display = activeIsMine ? "flex" : "none";
+    ctxSep.style.display = activeIsMine ? "block" : "none";
+
+    // Позиционируем меню
+    const x = Math.min(e.clientX, window.innerWidth - 170);
+    const y = Math.min(e.clientY, window.innerHeight - 120);
+    ctxMenu.style.left = x + "px";
+    ctxMenu.style.top = y + "px";
+    ctxMenu.classList.add("show");
+}
+
+function hideCtxMenu(){
+    ctxMenu.classList.remove("show");
+    activeMessageId = null;
+}
+
+// Вешаем ПКМ на существующие сообщения
+function attachCtxMenu(messageEl){
+    messageEl.addEventListener("contextmenu", function(e){
+        showCtxMenu(e, messageEl);
+    });
+}
+
+document.querySelectorAll(".message").forEach(attachCtxMenu);
+
+// Скрыть меню при клике мимо
+document.addEventListener("click", hideCtxMenu);
+document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") hideCtxMenu();
+});
+
+// Скопировать текст
+ctxCopy.addEventListener("click", function(){
+    if(activeMessageText){
+        navigator.clipboard.writeText(activeMessageText).catch(() => {
+            // fallback для старых браузеров
+            const ta = document.createElement("textarea");
+            ta.value = activeMessageText;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+        });
+    }
+    hideCtxMenu();
+});
+
+// Удалить сообщение
+ctxDelete.addEventListener("click", function(){
+    if(activeMessageId){
+        deleteMessage(activeMessageId);
+    }
+    hideCtxMenu();
+});
+
+function deleteMessage(messageId){
+    socket.send(JSON.stringify({
+        type: "delete",
+        message_id: messageId
+    }));
+}
+
+// WebSocket
+socket.onmessage = function(event){
+    const data = JSON.parse(event.data);
+
+    if(data.type === "typing"){
+        if(data.username !== currentUser){
+            typingBox.style.display = "block";
+            typingBox.innerText = `${data.display_name || data.username} печатает...`;
+            clearTimeout(window.typingTimeout);
+            window.typingTimeout = setTimeout(() => {
+                typingBox.style.display = "none";
+            }, 2000);
+        }
+        return;
+    }
+
+    if(data.type === "delete"){
+        const deletedMessage = document.getElementById(`message-${data.message_id}`);
+        if(deletedMessage){
+            deletedMessage.closest(".message-row").remove();
+        }
+        return;
+    }
+
+    const name = data.display_name || data.username;
+    const isMine = data.username === currentUser;
+
+    const row = document.createElement("div");
+    row.classList.add("message-row");
+    if(isMine) row.classList.add("my-row");
+
+    if(!isMine){
+        if(data.avatar_url){
+            row.innerHTML += `<img class="message-avatar" src="${data.avatar_url}">`;
+        } else {
+            row.innerHTML += `<div class="message-avatar">${name.charAt(0).toUpperCase()}</div>`;
+        }
+    }
+
+    const msg = document.createElement("div");
+    msg.classList.add("message");
+    msg.id = `message-${data.message_id}`;
+    msg.dataset.text = data.message;
+    if(isMine){
+        msg.classList.add("me");
+        msg.dataset.mine = "true";
+    }
+
+    msg.innerHTML = `
+        <div class="username">
+            ${name}
+            <span class="time">${new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"})}</span>
+        </div>
+        <div>${data.message}</div>
+    `;
+
+    attachCtxMenu(msg);
+
+    row.appendChild(msg);
+    messagesEl.appendChild(row);
+    scrollBottom();
+};
+
+function sendMessage(){
+    const text = input.value.trim();
+    if(text === "") return;
+    socket.send(JSON.stringify({ message: text }));
+    input.value = "";
+}
+
+sendBtn.addEventListener("click", sendMessage);
+
+input.addEventListener("keydown", function(e){
+    if(e.key === "Enter") sendMessage();
+});
+
+input.addEventListener("input", function(){
+    socket.send(JSON.stringify({ type: "typing" }));
+});
+
+</script>
+
+</body>
+</html>

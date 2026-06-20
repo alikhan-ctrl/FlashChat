@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Регистрация</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+        radial-gradient(circle at top left,#1f3b52 0,transparent 35%),
+        linear-gradient(135deg,#0d141c,#121b24);
+    font-family:Segoe UI,Arial,sans-serif;
+    color:white;
+}
+
+.box{
+    width:460px;
+    background:#17212b;
+    border:1px solid #2b3d4d;
+    border-radius:22px;
+    padding:34px;
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+}
+
+.logo{
+    text-align:center;
+    font-size:32px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.logo span{
+    color:#5ea4e8;
+}
+
+h1{
+    text-align:center;
+    margin:0 0 8px;
+    font-size:22px;
+    font-weight:600;
+}
+
+.desc{
+    text-align:center;
+    color:#8d9baa;
+    font-size:14px;
+    margin-bottom:26px;
+}
+
+label{
+    display:block;
+    margin-bottom:7px;
+    color:#8d9baa;
+    font-size:13px;
+}
+
+input{
+    width:100%;
+    box-sizing:border-box;
+    padding:14px;
+    margin-bottom:16px;
+    border:1px solid #2b3d4d;
+    background:#0f1821;
+    color:white;
+    border-radius:12px;
+    outline:none;
+    transition:.15s;
+}
+
+input:focus{
+    border-color:#3f7faf;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#2c5f87;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    transition:.15s;
+}
+
+button:hover{
+    background:#39729e;
+}
+
+.errorlist{
+    list-style:none;
+    padding:12px;
+    margin:0 0 14px;
+    background:#3d2026;
+    border:1px solid #6d3139;
+    border-radius:12px;
+    color:#ffb8c1;
+    font-size:13px;
+}
+
+.helptext{
+    display:none;
+}
+
+.bottom{
+    margin-top:20px;
+    text-align:center;
+    color:#8d9baa;
+    font-size:14px;
+}
+
+.bottom a{
+    color:#9fc4e3;
+    text-decoration:none;
+}
+
+.bottom a:hover{
+    text-decoration:underline;
+}
+
+.footer{
+    margin-top:22px;
+    text-align:center;
+    color:#6d7c89;
+    font-size:12px;
+    border-top:1px solid #263847;
+    padding-top:16px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h1>Регистрация</h1>
+    <div class="desc">Создай аккаунт для FlashChat</div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <label>Логин</label>
+        {{ form.username.errors }}
+        {{ form.username }}
+
+        <label>Пароль</label>
+        {{ form.password1.errors }}
+        {{ form.password1 }}
+
+        <label>Повтор пароля</label>
+        {{ form.password2.errors }}
+        {{ form.password2 }}
+
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+
+    <div class="bottom">
+        Уже есть аккаунт? <a href="/accounts/login/">Войти</a>
+    </div>
+</div>
+
+</body>
+</html>

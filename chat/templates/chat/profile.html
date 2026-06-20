@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Профиль</title>
+
+<style>
+body{
+    margin:0;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at top left,#1f3b52 0,transparent 35%),
+        linear-gradient(135deg,#0d141c,#121b24);
+    font-family:Segoe UI,Arial,sans-serif;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.card{
+    width:460px;
+    background:#17212b;
+    border:1px solid #2b3d4d;
+    border-radius:20px;
+    padding:28px;
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+}
+
+.avatar{
+    width:96px;
+    height:96px;
+    border-radius:50%;
+    background:#2f6f9f;
+    object-fit:cover;
+    overflow:hidden;
+    display:block;
+    margin:0 auto 18px;
+    border:3px solid #263847;
+}
+
+.profile-info{
+    text-align:center;
+    margin-bottom:24px;
+}
+
+.display-name{
+    font-size:24px;
+    font-weight:650;
+    margin-bottom:4px;
+}
+
+.username{
+    color:#8d9baa;
+    font-size:14px;
+}
+
+h1{
+    font-size:18px;
+    margin:0 0 18px;
+    color:#c7d4df;
+    font-weight:600;
+}
+
+label{
+    display:block;
+    font-size:13px;
+    color:#8d9baa;
+    margin-bottom:7px;
+}
+
+input{
+    width:100%;
+    padding:13px 14px;
+    margin-bottom:16px;
+    border:1px solid #2b3d4d;
+    border-radius:12px;
+    background:#0f1821;
+    color:white;
+    box-sizing:border-box;
+    transition:.15s;
+}
+
+input:focus{
+    outline:none;
+    border-color:#3f7faf;
+}
+
+input[type="file"]{
+    padding:10px;
+    cursor:pointer;
+}
+
+button,
+.link{
+    width:100%;
+    display:block;
+    text-align:center;
+    text-decoration:none;
+    box-sizing:border-box;
+    border:none;
+    border-radius:12px;
+    margin-top:10px;
+    transition:.15s;
+}
+
+button{
+    background:#2c5f87;
+    color:white;
+    padding:13px;
+    font-size:14px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#39729e;
+}
+
+.link{
+    background:#22303c;
+    color:white;
+    padding:13px;
+}
+
+.link:hover{
+    background:#2b3d4d;
+}
+
+.logout{
+    background:#733039;
+}
+
+.logout:hover{
+    background:#8a3b45;
+}
+.profile-header{
+    text-align:center;
+    margin-bottom:28px;
+    padding-bottom:24px;
+    border-bottom:1px solid #2b3d4d;
+}
+
+.avatar{
+    width:120px;
+    height:120px;
+    margin:0 auto 16px;
+    border:4px solid #2f6f9f;
+    box-shadow:0 0 25px rgba(47,111,159,.25);
+}
+
+.display-name{
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.username{
+    color:#8d9baa;
+    font-size:15px;
+}
+
+.card{
+    width:500px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+
+    {% if profile.avatar %}
+        <img class="avatar" src="{{ profile.avatar.url }}">
+    {% else %}
+        <div class="avatar"></div>
+    {% endif %}
+
+    <div class="profile-header">
+        <div class="display-name">
+            {% if profile.display_name %}
+                {{ profile.display_name }}
+            {% else %}
+                {{ request.user.username }}
+            {% endif %}
+        </div>
+
+        <div class="username">
+            @{{ request.user.username }}
+        </div>
+    </div>
+
+    <div style="margin-bottom:20px;"></div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+       <label>Логин</label>
+        <input
+            value="@{{ request.user.username }}"
+            disabled
+        >
+
+        <label>Имя в чате</label>
+        <input
+            name="display_name"
+            value="{{ profile.display_name }}"
+            placeholder="Например: Манго Марк"
+        >
+
+        <label>Аватарка</label>
+        <input
+            type="file"
+            name="avatar"
+            accept="image/*"
+        >
+
+
+        <button type="submit">
+            Сохранить
+        </button>
+    </form>
+
+    <a class="link" href="/chats/">Назад к чатам</a>
+    <a class="link logout" href="/logout/">Выйти из аккаунта</a>
+
+</div>
+
+</body>
+</html>
